@@ -559,6 +559,8 @@ def make_report(env, kind='NORMAL', save_scores=True, **kwargs):
         comment = result.get('result_string', '')
         if comment.lower() in ['ok', 'time limit exceeded']:  # Annoying
             comment = ''
+        if 'result_percentage' in result:
+            comment = '<bold>' + _('Score') + ': ' + result['result_percentage'] + '</bold> ' + comment
         test_report.comment = Truncator(comment).chars(
             TestReport._meta.get_field('comment').max_length
         )
