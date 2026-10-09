@@ -1167,3 +1167,23 @@ If you don't have any data you want to keep, you don't have to do anything.
 
 For more details about the migration process, see the s3dedup documentation at
 ``https://github.com/sio2project/s3dedup``.
+
+Switching the docker-compose-dev.yml S3 backend from RustFS to Garage
+---------------------------------------------------------------------
+
+``docker-compose-dev.yml`` now uses Garage as the S3 backend for s3dedup. The ``garage-init``
+service configures the node, the access key and the ``oioioi-filetracker`` bucket on every start.
+Files stored in RustFS are not migrated.
+
+If you don't need your dev data, run ``./easy_toolbox.py wipe`` and then ``./easy_toolbox.py up``.
+
+To keep the database but start with empty file storage, remove the s3dedup metadata and the
+sandbox upload marker, so that sandboxes are uploaded again (volume names are prefixed with the
+compose project name, ``oioioi`` by default)::
+
+    ./easy_toolbox.py down
+    docker volume rm oioioi_s3dedup-data-dev oioioi_rustfs-data-dev
+    docker run --rm -v oioioi_filetracker-data-dev:/media busybox rm -f /media/.sandboxes_uploaded
+    ./easy_toolbox.py up
+
+Files uploaded earlier (problem packages, submissions) will be missing and have to be uploaded again.

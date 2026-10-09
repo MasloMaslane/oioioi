@@ -1,0 +1,24 @@
+# Single-node Garage configuration for the docker-compose-dev.yml setup.
+# NOT for production use: secrets below are fixed so the dev setup is reproducible.
+# https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+
+# IPv4 binds: Docker often runs containers without IPv6, where [::] fails to bind.
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "127.0.0.1:3901"
+rpc_secret = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "0.0.0.0:3900"
+root_domain = ".s3.garage.localhost"
+
+[admin]
+api_bind_addr = "0.0.0.0:3902"
+admin_token = "oioioi-dev-admin-token"
